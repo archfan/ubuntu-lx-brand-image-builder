@@ -238,6 +238,8 @@ if [[ "$CHECK_VERSION" -eq 1 ]]; then
   echo "Removing udev package"
   chroot $INSTALL_DIR apt-get -qq remove udev
   chroot $INSTALL_DIR apt-get -qq autoremove
+  echo "Installing cloud-init"
+  chroot $INSTALL_DIR apt-get -qq install cloud-init
 
   # Systemd overrides for Ubuntu 16.04 and newer
   #
