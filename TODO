@@ -1,1 +1,19 @@
 * Write a systemd service file for the ttyS0 service.
+* Fix networking which is completely broken for some reason
+
+Output:
+root@pihole01:~# systemctl --failed
+  UNIT                           LOAD   ACTIVE SUB    DESCRIPTION                          
+● cloud-final.service            loaded failed failed Execute cloud user/final scripts     
+● networking.service             loaded failed failed Raise network interfaces             
+● systemd-tmpfiles-setup.service loaded failed failed Create Volatile Files and Directories
+
+
+root@pihole01:~# systemctl status networking.service
+● networking.service - Raise network interfaces
+   Loaded: loaded (/lib/systemd/system/networking.service; enabled; vendor preset: enabled)
+   Active: failed (Result: exit-code) since Mon 2019-04-29 18:38:30 UTC; 5s ago
+     Docs: man:interfaces(5)
+  Process: 30021 ExecStart=/sbin/ifup -a --read-environment (code=exited, status=1/FAILURE)
+  Process: 30017 ExecStartPre=/bin/sh -c [ "$CONFIGURE_INTERFACES" != "no" ] && [ -n "$(ifquery --read-environment --list --exclude=lo)" ] && udevadm settle (code=exited, status=127)
+ Main PID: 30021 (code=exited, status=1/FAILURE)
