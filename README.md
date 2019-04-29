@@ -32,8 +32,8 @@ Example template:
     "8.8.8.8",
     "1.1.1.1"
   ],
-  "ram": "8192",
-  "vcpus": "12",
+  "ram": "4096",
+  "vcpus": "6",
   "nics": [
     {
       "nic_tag": "igb0",
@@ -53,7 +53,7 @@ Example template:
     {
       "boot": false,
       "model": "virtio",
-      "size": 30000
+      "size": 15000
     }
  ],
 "customer_metadata": {
