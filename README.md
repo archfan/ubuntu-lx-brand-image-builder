@@ -63,3 +63,9 @@ Example template:
 }
 
 ```
+
+```zconsole <VM-UUID>```
+```apt-get install -y debootstrap git apt-transport-https```
+```git clone https://github.com/archfan/ubuntu-lx-brand-image-builder.git && cd ubuntu-lx-brand-image-builder```
+```mkdir /mnt/chroot```
+```./install -r bionic -a amd64 -d /mnt/chroot -m http://archive.ubuntu.com/ubuntu/ -i lx-ubuntu-18.04-archfan -p "Archfan's Ubuntu 18.04 LX Brand" -D "Archfan's Ubuntu 18.04 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux```
