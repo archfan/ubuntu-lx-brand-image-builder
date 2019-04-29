@@ -235,11 +235,11 @@ if [[ "$CHECK_VERSION" -eq 1 ]]; then
 
   # Uninstall udev
   # See https://github.com/joyent/smartos-live/issues/596
-  echo "Removing udev package"
+  echo "Removing udev"
   chroot $INSTALL_DIR apt-get -qq remove udev
   chroot $INSTALL_DIR apt-get -qq autoremove
-  echo "Installing cloud-init"
-  chroot $INSTALL_DIR apt-get -qq install apt-transport-https cloud-init
+  echo "Installing cloud-init and ifupdown for Ubuntu >14.04"
+  chroot $INSTALL_DIR apt-get -qq install apt-transport-https cloud-init ifupdown
 
   # Systemd overrides for Ubuntu 16.04 and newer
   #
@@ -250,6 +250,7 @@ if [[ "$CHECK_VERSION" -eq 1 ]]; then
   #
   # TODO: This should be removed when the relevant cgroup etc support is in
   # the platform.
+  # I'll leave this here. In case someone wants to experiment with it.
   SERVICES=( systemd-hostnamed systemd-resolved systemd-networkd systemd-localed systemd-timedated )
 
   for SERVICE in "${SERVICES[@]}"; do
@@ -266,6 +267,16 @@ ProtectSystem=no
 ProtectHome=no
 OVERRIDE
   done
+
+echo "==> Disabling systemd-networkd and netplan.io"
+# networkd just adds more unncessary complexity and isn't needed.
+# Same for netplan.io which is just an horrible abstraction layer for networkd and NetworkManager (which itself is an abstraction layer on top of at least one more abstraction layer)
+# I thought containers were all about removing layers. Let's remove some.
+chroot $INSTALL_DIR systemctl unmask networking
+chroot $INSTALL_DIR systemctl enable networking
+chroot $INSTALL_DIR systemctl disable systemd-networkd.socket systemd-resolved systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+chroot $INSTALL_DIR systemctl mask systemd-networkd.socket systemd-resolved systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+chroot $INSTALL_DIR apt-get -qq purge netplan.io
 fi
 
 echo "==> Pinning makedev package"

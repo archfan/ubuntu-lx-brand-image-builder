@@ -1,0 +1,5 @@
+*.tar.gz
+*.json
+*.zfs.gz
+*.deb
+sha
