@@ -30,7 +30,7 @@ Usage:
   $0 -t <TARBALL> -k <KERNEL> -m <MIN_PLATFORM> -i <IMAGE_NAME> -d <DESC> -u <DOCS>
 
 Example:
-  $0 -t /var/tmp/lx-ubuntu-18.04-20190429.tar.gz -k 3.16.65 -m 20190429T201900Z -i lx-ubuntu-18.04 -d "Ubuntu 18.04 lx 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
+  $0 -t /var/tmp/lx-ubuntu-18.04-20190429.tar.gz -k 3.16.65 -m 20190424T233834Z -i lx-ubuntu-18.04 -d "Ubuntu 18.04 lx 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
 
 OPTIONS:
   -t The full path to the tar archive
