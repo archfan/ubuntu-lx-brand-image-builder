@@ -51,8 +51,6 @@ Example template:
       "model": "virtio"
     },
     {
-      "media": "disk",
-      "nocreate": true,
       "boot": false,
       "model": "virtio",
       "size": 30000
