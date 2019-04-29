@@ -1,3 +1,5 @@
 *.tar.gz
 *.json
 *.zfs.gz
+*.deb
+shasum256.txt

@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2017 Joyent Inc., All rights reserved.
 #
-# Install Ubuntu 14.04 into a directory, modify the installation, then tar it up.
+# Install Ubuntu 18.04 into a directory, modify the installation, then tar it up.
 #
 
 if [[ -n "$TRACE" ]]; then
@@ -26,7 +26,7 @@ Usage:
   $0 -r <RELEASE> -a <ARCH> -d <INSTALL_DIR> -m <MIRROR> -i <IMAGE_NAME> -p <NAME> -D <DESC> -u <DOCS> -c <CUSTOMIZE FILE> -b <BASE IMAGE>
 
 Example:
-  $0 -r trusty -a amd64 -d /mnt/chroot -m http://archive.ubuntu.com/ubuntu/ -i lx-ubuntu-14.04 -p "Ubuntu 14.04 LX Brand" -D "Ubuntu 14.04 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
+  $0 -r bionic -a amd64 -d /mnt/chroot -m http://archive.ubuntu.com/ubuntu/ -i lx-ubuntu-18.04 -p "Ubuntu 18.04 LX Brand" -D "Ubuntu 18.04 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
 
 OPTIONS:
   -r The desired release (e.g "trusty")
@@ -39,7 +39,7 @@ OPTIONS:
   -u A URL to the image docs [optional]
   -c Customize file for image you want to create.  customize.postgresql, customize.percona
   -o Optional arguments to be passed to the customize file.
-  -b Base image name. ubuntu-14.04
+  -b Base image name. ubuntu-18.04
   -h Show this message
 
 EOF
@@ -179,7 +179,7 @@ if [[ -d $INSTALL_DIR ]]; then
 fi
 
 debootstrap --components=main --arch=$ARCH \
-    --include=apt-transport-https,ca-certificates,curl,dbus,gettext-base,less,man-db,openssh-server,sudo,wget,vim \
+    --include=ca-certificates,curl,dbus,gettext-base,less,man-db,openssh-server,sudo,wget,vim \
     $RELEASE $INSTALL_DIR $MIRROR
 echo "==> Done!"
 
@@ -187,9 +187,9 @@ echo "==> Mounting /proc and /sys in chroot"
 chroot $INSTALL_DIR mount -t proc none /proc
 chroot $INSTALL_DIR mount -t sysfs sysfs /sys
 
-echo "==> Setting TZ to UTC"
+echo "==> Setting TZ to CET"
 rm $INSTALL_DIR/etc/localtime
-cp $INSTALL_DIR/usr/share/zoneinfo/UTC $INSTALL_DIR/etc/localtime
+cp $INSTALL_DIR/usr/share/zoneinfo/Europe/Berlin $INSTALL_DIR/etc/localtime
 
 echo "==> Setting locale to en_US.UTF-8"
 export DEBIAN_FRONTEND=noninteractive
@@ -225,7 +225,7 @@ chroot $INSTALL_DIR apt-get -qq update
 chroot $INSTALL_DIR apt-get -qq upgrade
 
 echo "==> Installing additional packages"
-chroot $INSTALL_DIR apt-get -qq install --no-install-recommends python-software-properties software-properties-common
+chroot $INSTALL_DIR apt-get -qq install --no-install-recommends software-properties-common
 
 # Get release version via os-release
 # shellcheck source=/dev/null
@@ -239,7 +239,7 @@ if [[ "$CHECK_VERSION" -eq 1 ]]; then
   chroot $INSTALL_DIR apt-get -qq remove udev
   chroot $INSTALL_DIR apt-get -qq autoremove
   echo "Installing cloud-init"
-  chroot $INSTALL_DIR apt-get -qq install cloud-init
+  chroot $INSTALL_DIR apt-get -qq install apt-transport-https cloud-init
 
   # Systemd overrides for Ubuntu 16.04 and newer
   #
@@ -250,7 +250,7 @@ if [[ "$CHECK_VERSION" -eq 1 ]]; then
   #
   # TODO: This should be removed when the relevant cgroup etc support is in
   # the platform.
-  SERVICES=( systemd-hostnamed systemd-localed systemd-timedated )
+  SERVICES=( systemd-hostnamed systemd-resolved systemd-networkd systemd-localed systemd-timedated )
 
   for SERVICE in "${SERVICES[@]}"; do
     echo "==> Adding systemd overrides for $SERVICE"
@@ -301,7 +301,7 @@ rm -rf $INSTALL_DIR/etc/resolvconf/resolv.conf.d/tail
 rm -rf $INSTALL_DIR/etc/resolvconf/resolv.conf.d/original
 
 echo "==> Adding getty service on ttyS0 for 'vmadm console' command"
-cat << TTYS0 > $INSTALL_DIR/etc/init/ttyS0.conf
+cat << TTYS0 > $INSTALL_DIR/etc/init.d/ttyS0.conf
 # ttyS0 - getty
 #
 # This service maintains a getty on ttyS0 from the point the system is
