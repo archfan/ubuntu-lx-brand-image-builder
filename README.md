@@ -17,3 +17,51 @@ In order to use these scripts you'll need:
 
 1. Run `./install -d <chroot> -m <mirror> -i <image name> -p <proper name> -u <image docs>` under Ubuntu to install Ubuntu 14.04 in a given directory. This will create a tarball of the installation in your working directory (named `<image name>-<YYMMDD>.tar.gz`). See `./install -h` for detailed usage.
 2. Copy the tarball to a SmartOS machine or SDC headnode and run `./create-lx-image -t <TARBALL> -i <IMAGE_NAME> -d <DESC> -u <DOCS>` (substituting the name of your tar file). This will create the image file and manifest. See `/create-lx-image -h` for detailed usage.
+
+## Installation
+
+1. Set up a BHYVE or KVM instance on your SmartOS host. Give it plenty of vCores and RAM for the building process. Also add a second disk which is mounted on /mnt.
+
+Example template:
+```bash
+{
+  "brand": "bhyve",
+  "alias": "ubuntu-lx-brand-image-builder",
+  "hostname": "ubuntu-lx-brand-image-builder",
+  "resolvers": [
+    "8.8.8.8",
+    "1.1.1.1"
+  ],
+  "ram": "8192",
+  "vcpus": "12",
+  "nics": [
+    {
+      "nic_tag": "igb0",
+      "ip": "10.10.30.120",
+      "netmask": "255.255.255.0",
+      "gateway": "10.10.30.1",
+      "model": "virtio",
+      "primary": true
+    }
+  ],
+  "disks": [
+    {
+      "image_uuid": "d6e56c0e-1e51-11e9-8ff1-2fecf38a5566",
+      "boot": true,
+      "model": "virtio"
+    },
+    {
+      "media": "disk",
+      "nocreate": true,
+      "boot": false,
+      "model": "virtio",
+      "size": 30000
+    }
+ ],
+"customer_metadata": {
+ "root_authorized_keys": "pubkey here",
+ "user-script" : "/usr/sbin/mdata-get root_authorized_keys > ~root/.ssh/authorized_keys ; /usr/sbin/mdata-get root_authorized_keys > ~admin/.ssh/authorized_keys"  
+}
+}
+
+```
