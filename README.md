@@ -7,8 +7,7 @@ This is a collection of scripts used for creating an lx-brand Ubuntu image.
 In order to use these scripts you'll need:
 
 - Ubuntu (or Debian) running in a VM or bare metal (required for the `install` script)
-- debootstrap: `apt-get install -y debootstrap`
-- git: `apt-get install -y git`
+- debootstrap & git: `apt-get install -y debootstrap git`
 - A SmartOS (or SDC headnode) install (required for the `create-lx-image` script)
 
 **Note***: The build scripts currently assume you are running under a KVM ubuntu-certified instance that has a secondary disk mounted to `/mnt`. The scripts have not been tested on an lx-brand instance.
