@@ -64,16 +64,33 @@ Example template:
 
 ```
 
+Log into the Ubuntu VM we've just created.
+
 ```zconsole <VM-UUID>```
 
+Install a few missing packages.
 ```apt-get install -y debootstrap git apt-transport-https```
 
+Clone our repository.
 ```git clone https://github.com/archfan/ubuntu-lx-brand-image-builder.git && cd ubuntu-lx-brand-image-builder```
 
+Create the chroot directory.
 ```mkdir /mnt/chroot```
 
+Execute the command to create a lx image - modify it as you see fit.
 ```
 ./install -r bionic -a amd64 -d /mnt/chroot -m http://archive.ubuntu.com/ubuntu/ -i lx-ubuntu-18.04-archfan -p "Archfan's Ubuntu 18.04 LX Brand" -D "Archfan's Ubuntu 18.04 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
 ```
-
+Copy the file over to your SmartOS hypervisor.
 ```scp lx-ubuntu-18.04-archfan-20190429.tar.gz  root@smartos-server-ip:/opt/lx-images```
+
+Install git and clone the repository again.
+```pkgin install git && cd /opt && git clone https://github.com/archfan/ubuntu-lx-brand-image-builder.git && cd ubuntu-lx-brand-image-builder```
+
+Create the image file and manifest.
+```/create-lx-image -t /opt/lx-images/ubuntu-lx-brand-image-builder/lx-ubuntu-18.04-archfan-20190429.tar.gz -k 3.16.65 -m 20190424T233834Z -i lx-ubuntu-18.04 -d "Ubuntu 18.04 lx 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux```
+
+Install the image with imgadm.
+```imgadm install -m lx-ubuntu-18.04-20190429.json -f lx-ubuntu-18.04-20190429.zfs.gz```
+
+Done.
