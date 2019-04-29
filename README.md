@@ -75,3 +75,5 @@ Example template:
 ```
 ./install -r bionic -a amd64 -d /mnt/chroot -m http://archive.ubuntu.com/ubuntu/ -i lx-ubuntu-18.04-archfan -p "Archfan's Ubuntu 18.04 LX Brand" -D "Archfan's Ubuntu 18.04 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux
 ```
+
+```scp lx-ubuntu-18.04-archfan-20190429.tar.gz  root@smartos-server-ip:/opt/lx-images```
