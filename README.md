@@ -20,7 +20,7 @@ In order to use these scripts you'll need:
 
 ## Installation
 
-1. Set up a BHYVE or KVM instance on your SmartOS host. Give it plenty of vCores and RAM for the building process. Also add a second disk which is mounted on /mnt.
+1. Set up a BHYVE or KVM Ubuntu instance on your SmartOS host. Give it plenty of vCores and RAM for the building process. Also add a second disk which is mounted on /mnt.
 
 Example template:
 ```bash
@@ -46,7 +46,7 @@ Example template:
   ],
   "disks": [
     {
-      "image_uuid": "d6e56c0e-1e51-11e9-8ff1-2fecf38a5566",
+      "image_uuid": "cb0849d5-d890-4158-b788-07b11718179d",
       "boot": true,
       "model": "virtio"
     },
